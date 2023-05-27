@@ -1,16 +1,20 @@
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="model.product.Product" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%ArrayList<Product> products=(ArrayList<Product>) application.getAttribute("products"); %>
+
 <div class="container">
-	{% block contenido %}
 		<div class="content">
-			{% for producto in lista_productos %}
+			<%-- <% for(Product p : products){ %> --%>
 				<div class="producto">
 					<a href="producto.php?producto={{producto.id_prod}}">
-						<img src={{producto.foto_portada}}>
-						<h3>{{producto.nombre}}</h3>
+						<%-- <img src=<%= p.getMain_photo() %>> --%>
+						<%-- <h3><%= p.getName() %></h3> --%>
 					</a>
 				</div>
-			{% endfor %}
+			<%-- <% } %> --%>
 		</div>
-	{% endblock %}
 
 	<aside>
 		<h2>Opciones de Usuario</h2>
@@ -43,7 +47,7 @@
 						<a href="lista_productos.php">Lista Productos</a>
 					</li>
 					<li>
-						<a href="insertar_producto.php">Añadir Producto</a>
+						<a href="insertar_producto.php">AÃ±adir Producto</a>
 					</li>
 				{% endif %}
 
@@ -53,7 +57,7 @@
 			
 		</ul>
 		<br><br>
-		<h2>Descripción</h2>
+		<h2>DescripciÃ³n</h2>
 		
 		<ul>
 			<li>
@@ -65,7 +69,7 @@
           	</ul>
 
 		<br>
-		<p>Página dedicada a ofrecer información sobre los diversos productos que ofrece la marca Tesla.</p>
+		<p>PÃ¡gina dedicada a ofrecer informaciÃ³n sobre los diversos productos que ofrece la marca Tesla.</p>
 	</aside>
 
 </div>
