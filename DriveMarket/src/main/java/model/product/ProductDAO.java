@@ -35,11 +35,10 @@ public class ProductDAO implements ProductDAOMethod{
 	public ArrayList<Product> getAllProducts() {
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
-            ps = connection.prepareStatement("select * from Prodotto");
+            ps = connection.prepareStatement("select * from Producto");
             ResultSet rs = ps.executeQuery();
             ArrayList<Product> lista = new ArrayList<>();
             while (rs.next()) {
-                Product prodotto=new Product();
                 Product product= new Product();
                 product.setId_prod(rs.getInt(1));
                 product.setName(rs.getString(2));
@@ -47,7 +46,7 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setDescription(rs.getString(4));
                 product.setMain_photo(rs.getString(5));
                 product.setLink(rs.getString(6));
-                lista.add(prodotto);
+                lista.add(product);
             }
             connection.close();
             return lista;

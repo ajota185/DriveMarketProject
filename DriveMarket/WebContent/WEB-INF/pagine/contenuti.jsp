@@ -6,14 +6,14 @@
 
 <div class="container">
 		<div class="content">
-			<%-- <% for(Product p : products){ %> --%>
+			<% for(Product p : products){ %>
 				<div class="producto">
 					<a href="producto.php?producto={{producto.id_prod}}">
-						<%-- <img src=<%= p.getMain_photo() %>> --%>
-						<%-- <h3><%= p.getName() %></h3> --%>
+						<img src=<%= p.getMain_photo() %>>
+						<h3><%= p.getName() %></h3>
 					</a>
 				</div>
-			<%-- <% } %> --%>
+			<% } %> 
 		</div>
 
 	<aside>

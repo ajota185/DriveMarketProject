@@ -15,23 +15,27 @@ public class Storage  {
 //		
 //	}
 	
-	public static synchronized Connection getConnection() throws SQLException {
+	public static synchronized Connection getConnection(){
 		if(connection == null) {
 			
 			try {
 				Class.forName("com.mysql.cj.jdbc.Driver");
-			} catch (ClassNotFoundException e) {
-				System.out.println("DB driver not found:"+ e.getMessage());
+				
+				String ip = "localhost";
+				String port = "3306";
+				String db = "TSW";
+				String username = "antonio";
+				String password = "antonio";
+
+				connection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
+				connection.setAutoCommit(false);
+				
+			} catch (Exception e) {
+				System.out.println("Error connecting to database");
+				e.printStackTrace();
 			} 
 			
-			String ip = "localhost";
-			String port = "3306";
-			String db = "TSW";
-			String username = "antonio";
-			String password = "antonio";
-
-			connection = DriverManager.getConnection("jdbc:mysql://"+ ip+":"+ port+"/"+db+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", username, password);
-			connection.setAutoCommit(false);
+			
 		}
 		
 		return connection;
