@@ -9,7 +9,7 @@ import java.util.Optional;
 public class ProductDAO implements ProductDAOMethod{
 
 	@Override
-	public Optional<Product> cercaProdotto(int id_prod) {
+	public Product searchProduct(int id_prod) {
 		try(Connection connection= Storage.getConnection()){
             PreparedStatement preparedStatement;
             preparedStatement=connection.prepareStatement("select * from Producto where id_prod=?");
@@ -23,12 +23,12 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setDescription(resultSet.getString(4));
                 product.setMain_photo(resultSet.getString(5));
                 product.setLink(resultSet.getString(6));
-                return Optional.of(product);
+                return product;
             }
         }catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
         }
-        return Optional.empty();
+        return null;
 	}
 
 	@Override
@@ -107,5 +107,7 @@ public class ProductDAO implements ProductDAOMethod{
         }
 		
 	}
+
+	
 
 }
