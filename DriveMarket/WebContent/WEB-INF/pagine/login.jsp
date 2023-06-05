@@ -11,7 +11,6 @@
 	<jsp:include page="/WEB-INF/pagine/head.jsp">
 		<jsp:param value="DRIVE MARKET" name="title"/>
 		<jsp:param value="style" name="style"/>
-		<jsp:param value="script" name="scriptjs"/>
 	</jsp:include>
 </head>
 <body>

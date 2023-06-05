@@ -14,9 +14,9 @@
 <html>
 <head>
 	<jsp:include page="/WEB-INF/pagine/head.jsp">
-		<jsp:param value="DRIVE MARKET" name="title"/>
+		<jsp:param value="Product" name="title"/>
 		<jsp:param value="style" name="style"/>
-		<jsp:param value="script" name="scriptjs"/>
+		<jsp:param value="script" name="script"/>
 	</jsp:include>
 	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
@@ -46,9 +46,6 @@
 					<span>&nbsp;Facebook: </span>
 					<button id="boton-facebook" type="button"> <img src="./immagini/facebook-logo.png" /></button>
 					<span>&nbsp;&nbsp;</span>
-					<a href="../producto_imprimir.php?producto={{id}}"><button id ="boton-imprimir"> Imprimir</button></a>
-					<span>&nbsp;</span>
-					<button class="comentarios" id="boton-comentarios" type="button">Comentarios</button>
 				</div>
 	
 	

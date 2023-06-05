@@ -41,9 +41,6 @@ public class ServletLink extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String option=request.getParameter("option");
-//        HttpSession session= request.getSession();
-//        User utente=(User) session.getAttribute("utente");
-//        System.out.println("Sessione " );
         String pagina="";
         switch (option){
 
@@ -63,6 +60,9 @@ public class ServletLink extends HttpServlet {
             	break;
             case "deleteUser":
             	pagina="WEB-INF/pagine/deleteUser.jsp";
+            	break;
+            case "insertProduct":
+            	pagina="WEB-INF/pagine/insertProduct.jsp";
             	break;
           /*  default:pagina="webapp/index.jsp";
                 break;*/
