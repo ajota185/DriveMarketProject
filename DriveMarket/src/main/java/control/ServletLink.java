@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.product.Product;
+import model.product.ProductDAO;
 import model.user.User;
 
 /**
@@ -63,6 +65,18 @@ public class ServletLink extends HttpServlet {
             	break;
             case "insertProduct":
             	pagina="WEB-INF/pagine/insertProduct.jsp";
+            	break;
+            case "updateProduct":
+            	
+            	if(request.getParameter("id_prod")!=null) {
+    				int id_prod = Integer.parseInt(request.getParameter("id_prod"));
+    				ProductDAO productDAO = new ProductDAO();
+    				Product product = productDAO.searchProduct(id_prod);
+    				request.setAttribute("product", product);
+    				pagina="WEB-INF/pagine/updateProduct.jsp";
+    			}else {
+    				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+    			}
             	break;
           /*  default:pagina="webapp/index.jsp";
                 break;*/

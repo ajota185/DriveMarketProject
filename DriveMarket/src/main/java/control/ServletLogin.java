@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.shoppingCart.ShoppingCart;
+import model.shoppingCart.ShoppingCartDAO;
 import model.user.User;
 import model.user.UserDAO;
 
@@ -58,6 +60,11 @@ public class ServletLogin extends HttpServlet {
 			
 			if(user!=null) {
 				if(user.getPassw().equals(hashPassw)) {
+					ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
+					ShoppingCart shoppingCart = shoppingCartDAO.searchShoppingCart(user);
+					if(shoppingCart!=null) {
+						user.setShoppingCart(shoppingCart);
+					}
 					session.setAttribute("user", user);
 					response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
 				}else {

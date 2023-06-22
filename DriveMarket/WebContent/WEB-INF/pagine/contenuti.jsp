@@ -4,7 +4,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
-	ArrayList<Product> products=(ArrayList<Product>) application.getAttribute("products");
+	ArrayList<Product> products=(ArrayList<Product>) request.getAttribute("products");
+	if(products == null){
+		products=(ArrayList<Product>) application.getAttribute("products");
+	}
 %>
 
 <div class="container">

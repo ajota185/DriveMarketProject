@@ -63,6 +63,7 @@ public class User {
 	public void setShoppingCart(ShoppingCart shoppingCart) {
 		this.shoppingCart = shoppingCart;
 	}
+	
 
 	public ArrayList<Order> getOrders() {
 		return orders;

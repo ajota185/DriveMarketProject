@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.shoppingCart.ShoppingCartDAO;
 import model.user.User;
 import model.user.UserDAO;
 
@@ -86,6 +87,7 @@ public class ServlerRegister extends HttpServlet {
 					RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/WEB-INF/pagine/register.jsp");
 					request.setAttribute("errors", errors);
 					requestDispatcher.forward(request, response);
+					
 				}
 			}
 			else {

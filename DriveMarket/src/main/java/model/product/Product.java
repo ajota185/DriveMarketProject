@@ -1,5 +1,9 @@
 package model.product;
 
+import java.util.Objects;
+
+import model.user.User;
+
 public class Product {
 	private int id_prod;
 	private String name;
@@ -67,5 +71,13 @@ public class Product {
 
 	public void setLink(String link) {
 		this.link = link;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		Product product = (Product) o;
+		return Objects.equals(id_prod, product.id_prod);
 	}
 }

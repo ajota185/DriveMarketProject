@@ -2,32 +2,32 @@ package control;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import model.image.Image;
 import model.image.ImageDAO;
 import model.product.Product;
 import model.product.ProductDAO;
+import model.user.User;
 
 /**
- * Servlet implementation class ServletProduct
+ * Servlet implementation class ServletDeleteUser
  */
-@WebServlet(name="/ServletProduct", value="/ServletProduct")
-
-public class ServletProduct extends HttpServlet {
+@WebServlet(name="/ServletDeleteProduct", value="/ServletDeleteProduct")
+public class ServletDeleteProduct extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ServletProduct() {
+    public ServletDeleteProduct() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,23 +36,23 @@ public class ServletProduct extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		if(request.getParameter("id_prod")!=null) {
+		HttpSession session= request.getSession();
+		User user=(User) session.getAttribute("user");
+		
+		
+		if(user!=null && user.isAdmin()) {
 			int id_prod = Integer.parseInt(request.getParameter("id_prod"));
 			ProductDAO productDAO = new ProductDAO();
 			Product product = productDAO.searchProduct(id_prod);
-			request.setAttribute("product", product);
-			
-			ImageDAO imageDAO = new ImageDAO();
-			ArrayList<Image> images = imageDAO.getImagesByProduct(id_prod);
-			request.setAttribute("images", images);
-			
-			RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/WEB-INF/pagine/product.jsp");
-			requestDispatcher.forward(request, response);
+			if(product!=null) {
+				ImageDAO imageDAO = new ImageDAO();
+				imageDAO.deleteImages(id_prod);
+				productDAO.deleteProduct(id_prod);
+				response.sendRedirect("ServletHome");
+			}
 		}else {
 			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
 		}
-		
 	
 	}
 
@@ -60,8 +60,6 @@ public class ServletProduct extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
 	}
 
 }

@@ -56,7 +56,7 @@ public class ProductDAO implements ProductDAOMethod{
 	}
 
 	@Override
-	public void deleteProdotto(int id_prod) {
+	public void deleteProduct(int id_prod) {
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
             ps = connection.prepareStatement("delete from Producto where id_prod=?");
@@ -69,36 +69,43 @@ public class ProductDAO implements ProductDAOMethod{
 	}
 
 	@Override
-	public void insertProdotto(Product p) {
+	public int insertProduct(Product p) {
 		try(Connection connection=Storage.getConnection()){
-            PreparedStatement ps= connection.prepareStatement("insert into Prodotto value (?,?,?,?,?,?,?,?)");
-            ps.setInt(1,p.getId_prod());
-            ps.setString(2,p.getName());
-            ps.setDouble(3,p.getPrice());
-            ps.setString(4,p.getDescription());
-            ps.setString(5,p.getMain_photo());
-            ps.setString(6,p.getLink());
+			int res = 0;
+            PreparedStatement ps= connection.prepareStatement("insert into Producto (nombre, precio, descripcion, foto_portada, enlace) values (?,?,?,?,?)");
+            ps.setString(1,p.getName());
+            ps.setDouble(2,p.getPrice());
+            ps.setString(3,p.getDescription());
+            ps.setString(4,p.getMain_photo());
+            ps.setString(5,p.getLink());
             ps.execute();
-        }catch (SQLException sqlException){
+            PreparedStatement ps2= connection.prepareStatement("SELECT * from Producto");
+            ResultSet rs = ps2.executeQuery();
+            while(rs.next()) {
+            	res = rs.getInt(1);
+            }
+            return res;
+		
+		}catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
         }
 		
 	}
 
 	@Override
-	public void updateProdotto(Product p, int id_prod) {
+	public void updateProduct(Product p, int id_prod) {
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
-            ps = connection.prepareStatement("update Producto set id_prod = ?, nombre = ?, precio = ?," +
+            ps = connection.prepareStatement("update Producto set nombre = ?, precio = ?," +
                     "descripcion = ?, foto_portada = ?, enlace = ?" +
                     "where id_prod = ?", Statement.RETURN_GENERATED_KEYS);
-            ps.setInt(1,p.getId_prod());
-            ps.setString(2,p.getName());
-            ps.setDouble(3,p.getPrice());
-            ps.setString(4,p.getDescription());
-            ps.setString(5,p.getMain_photo());
-            ps.setString(6,p.getLink());
-            ps.setInt(7, id_prod);
+            
+            ps.setString(1,p.getName());
+            ps.setDouble(2,p.getPrice());
+            ps.setString(3,p.getDescription());
+            ps.setString(4,p.getMain_photo());
+            ps.setString(5,p.getLink());
+            ps.setInt(6, id_prod);
             if(ps.executeUpdate() != 1) {
                 throw new RuntimeException("update error");
             }

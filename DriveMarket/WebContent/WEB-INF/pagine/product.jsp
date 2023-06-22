@@ -50,14 +50,25 @@
 	
 	
 				<div class="iconos-producto">
-					<%if(user!=null && user.isAdmin()){ %>
-						<a href = "editar_producto.php?producto={{ id }}">
-							<i class="material-icons">edit</i>
-						</a>
-	
-						<a href = "borrar_producto.php?producto={{ id }}">
-							<i class="material-icons">delete</i>
-						</a>
+					<%if(user!=null){ %>
+						<%if(user.isAdmin()) {%>
+							<% String link = "ServletLink?option=updateProduct&id_prod="+product.getId_prod(); %>
+							<a href = <%=link %>>
+								<i class="material-icons">edit</i>
+							</a>
+		
+							<a href = "ServletDeleteProduct?id_prod=<%= product.getId_prod()%>">
+								<i class="material-icons">delete</i>
+							</a>
+						<%}else{ %>
+							<form action="ServletAddShoppingCart" method="post">
+					            Id_prod:<br>
+					            <input type="text" name="id_prod" value="<%=product.getId_prod() %>" readonly/><br>
+					            Quantity:<br>
+					            <input type="number" name="quantity" value="0"/><br>
+					            <input class="submit" type="submit" value="Add to ShoppingCart" />
+					        </form>
+						<%} %>
 					<%} %>
 				</div>
 		
