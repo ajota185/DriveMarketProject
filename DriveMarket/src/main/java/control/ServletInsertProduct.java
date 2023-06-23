@@ -134,7 +134,6 @@ public class ServletInsertProduct extends HttpServlet {
 				Image img = new Image();
 				img.setId_prod(id_prod);
 				img.setPath(main_photo);
-				img.setPie("");
 				
 				
 				
@@ -142,7 +141,6 @@ public class ServletInsertProduct extends HttpServlet {
 					Image img2 = new Image();
 					img2.setId_prod(id_prod);
 					img2.setPath("./immagini/"+image);
-					img2.setPie("");
 					ImageDAO imageDAO = new ImageDAO();
 					imageDAO.insertImage(img2);
 				}

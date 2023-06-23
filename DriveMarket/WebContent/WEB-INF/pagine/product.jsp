@@ -61,11 +61,21 @@
 								<i class="material-icons">delete</i>
 							</a>
 						<%}else{ %>
+							<%
+								int quantity=0;
+								if(user.getShoppingCart()!=null){
+									ArrayList<Product> products = user.getShoppingCart().getProducts();
+									int index = products.indexOf(product);
+									if(index>-1){
+										quantity = user.getShoppingCart().getQuantity().get(index);
+									} 
+								}
+							%>
 							<form action="ServletAddShoppingCart" method="post">
 					            Id_prod:<br>
 					            <input type="text" name="id_prod" value="<%=product.getId_prod() %>" readonly/><br>
 					            Quantity:<br>
-					            <input type="number" name="quantity" value="0"/><br>
+					            <input type="number" name="quantity" value="<%=quantity %>" min="0"/><br>
 					            <input class="submit" type="submit" value="Add to ShoppingCart" />
 					        </form>
 						<%} %>
@@ -78,12 +88,6 @@
 				<%for(Image i : images){ %>
 					<div class="img-producto">
 						<img src=<%=i.getPath() %> >
-						<span><%=i.getPie() %></span>
-						<%if(user!=null && user.isAdmin()){ %>
-							<a href = "editar_pie.php?imagen={{ imagen.id }}">
-								<i class="material-icons">edit</i>
-							</a>
-						<%} %>
 					</div>
 				<%} %>
 			</div>

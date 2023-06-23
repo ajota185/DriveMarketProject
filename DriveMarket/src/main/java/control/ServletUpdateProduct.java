@@ -141,7 +141,6 @@ public class ServletUpdateProduct extends HttpServlet {
 					
 					for(Image img : images) {
 						img.setId_prod(id_prod);
-						img.setPie("");
 					}
 					imageDAO.updateImagesOfProduct(images,id_prod);
 				}

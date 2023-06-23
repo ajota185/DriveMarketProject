@@ -1,3 +1,4 @@
+<%@ page import="model.user.User" %>
 <header>
 	<div class="container-logo">
 		<img  src="immagini/tesla-logo.jpg" >
@@ -11,7 +12,10 @@
 				<li><a href="ServletHome">Home</a></li>
 				<li><a href="buscador_producto_ajax.php">Search</a></li>
 				<li><a href="index.php">Cars</a></li>
-				<li><a href="index.php">Carrello</a></li>
+				<% User user = (User) session.getAttribute("user"); %>
+				<%if(user!=null && user.getShoppingCart()!=null){ %>
+					<li><a href="ServletLink?option=shoppingCart">Shopping Cart</a></li>
+				<%} %>
 			</ul>
 		</div>
 	</div>

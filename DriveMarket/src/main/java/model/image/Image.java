@@ -9,11 +9,10 @@ public class Image {
 		
 	}
 	
-	public Image(int id_img, String path, int id_prod, String pie) {
+	public Image(int id_img, String path, int id_prod) {
 		this.id_img = id_img;
 		this.path = path;
 		this.id_prod = id_prod;
-		this.pie = pie;
 	}
 
 	public int getId_img() {
@@ -34,11 +33,4 @@ public class Image {
 	public void setId_prod(int id_prod) {
 		this.id_prod = id_prod;
 	}
-	public String getPie() {
-		return pie;
-	}
-	public void setPie(String pie) {
-		this.pie = pie;
-	}
-	private String pie;
 }

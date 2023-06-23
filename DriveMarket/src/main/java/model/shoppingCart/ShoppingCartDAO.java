@@ -30,7 +30,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
             
             while (rs.next()){
             	
-            	Product product = productDAO.searchProduct(rs.getInt(2));
+            	Product product = productDAO.searchProduct(rs.getInt(3));
             	products.add(product);
             	quantity.add(rs.getInt(4));
             	

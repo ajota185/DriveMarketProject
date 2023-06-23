@@ -24,7 +24,6 @@ public class ImageDAO implements ImageDAOMethod{
                 image.setId_img(rs.getInt(1));
                 image.setPath(rs.getString(2));
                 image.setId_prod(rs.getInt(3));
-                image.setPie(rs.getString(4));
                 lista.add(image);
             }
             connection.close();
@@ -37,10 +36,9 @@ public class ImageDAO implements ImageDAOMethod{
 	@Override
 	public void insertImage(Image image) {
 		try(Connection connection=Storage.getConnection()){
-            PreparedStatement ps= connection.prepareStatement("insert into Imagenes (ruta, id_prod, pie) values (?,?,?)");
+            PreparedStatement ps= connection.prepareStatement("insert into Imagenes (ruta, id_prod) values (?,?)");
             ps.setString(1,image.getPath());
             ps.setDouble(2,image.getId_prod());
-            ps.setString(3,image.getPie());
             ps.execute();
 		
 		}catch (SQLException sqlException){
@@ -57,10 +55,9 @@ public class ImageDAO implements ImageDAOMethod{
             ps.execute();
             
             for(Image img : images) {
-            	PreparedStatement ps2= connection.prepareStatement("insert into Imagenes (ruta, id_prod, pie) values (?,?,?)");
+            	PreparedStatement ps2= connection.prepareStatement("insert into Imagenes (ruta, id_prod) values (?,?)");
                 ps2.setString(1,img.getPath());
                 ps2.setDouble(2,img.getId_prod());
-                ps2.setString(3,img.getPie());
                 ps2.execute();
             }
             

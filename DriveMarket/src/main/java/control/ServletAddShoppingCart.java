@@ -67,8 +67,7 @@ public class ServletAddShoppingCart extends HttpServlet {
 						
 						
 						ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
-						int id = shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity);
-						shoppingCart.setId(id);
+						shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity);
 						user.setShoppingCart(shoppingCart);
 					}else {
 						ShoppingCart shoppingCart = user.getShoppingCart();
@@ -84,9 +83,18 @@ public class ServletAddShoppingCart extends HttpServlet {
 							shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity);
 						}
 					}
+				}else {
+					if(user.getShoppingCart()!=null) {
+						ShoppingCart shoppingCart = user.getShoppingCart();
+						if(shoppingCart.getProducts().contains(product)) {
+							int index =shoppingCart.getProducts().indexOf(product);
+							shoppingCart.getQuantity().set(index, quantity);
+							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
+							shoppingCartDAO.updateProductToShoppingCart(user.getNickName(), id_prod, quantity);
+						}
+					}
 				}
 			}
-//			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pagine/shoppingCart.jsp");
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
 			dispatcher.forward(request, response);
 			
