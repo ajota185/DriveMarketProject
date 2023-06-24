@@ -59,7 +59,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
             ps.setString(2,nick);
             ps.setInt(3,quantity);
             ps.execute();
-            PreparedStatement ps2= connection.prepareStatement("SELECT * from Producto");
+            PreparedStatement ps2= connection.prepareStatement("SELECT * from ShoppingCart");
             ResultSet rs = ps2.executeQuery();
             while(rs.next()) {
             	res = rs.getInt(1);
@@ -89,6 +89,25 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }
+	}
+
+	@Override
+	public void doOrder(String nick, int id_prod, int id_order) {
+		try (Connection connection = Storage.getConnection()) {
+            PreparedStatement ps;
+            ps = connection.prepareStatement("update ShoppingCart set id_order = ? "+
+            "where nick = ? AND id_prod = ? AND id_order IS NULL", Statement.RETURN_GENERATED_KEYS);
+            
+            ps.setInt(1,id_order);
+            ps.setString(2, nick);
+            ps.setInt(3, id_prod);
+            if(ps.executeUpdate() != 1) {
+                throw new RuntimeException("update error");
+            }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+		
 	}
 
 	

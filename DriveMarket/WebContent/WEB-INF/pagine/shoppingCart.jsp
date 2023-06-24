@@ -27,7 +27,10 @@
 	
 	        <h3 style="text-align:left;">Products in the ShoppingCart</h3>
 	        <div class="lista-productos">
+	        	<%float total=0; %>
 	            <%for(int i=0; i<products.size(); i++){ %>
+	            	<%if(quantity.get(i)>0){ %>
+	            		<%total+=(quantity.get(i)*products.get(i).getPrice()); %>
 	                    <div class="producto-lista">
 	                        <div class="imagen-producto-lista">
 	                            <a href=<%= "ServletProduct?id_prod="+products.get(i).getId_prod()%>>
@@ -43,24 +46,14 @@
 	                            <p>Quantity: <%=quantity.get(i) %></p>
 	                        </div>
 	                    </div>
+                    <%} %>
 	            <%} %>
 	
 	        </div>
+	        <h3 style="text-align:left;">Total: <%=total %> €</h3>
+	        <a href="ServletAddOrder"><button >Buy</button></a>
 	
 	    </div>
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 
 		<jsp:include page="/WEB-INF/pagine/aside.jsp"/>

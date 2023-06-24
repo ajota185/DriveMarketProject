@@ -4,6 +4,7 @@ import model.user.User;
 
 import java.util.ArrayList;
 
+import model.order.Order;
 import model.product.Product;
 
 public class ShoppingCart {
@@ -11,8 +12,15 @@ public class ShoppingCart {
 	private User user;
 	private ArrayList<Product> products;
 	private ArrayList<Integer> quantity;
+	private Order order;
 	
 	
+	public Order getOrder() {
+		return order;
+	}
+	public void setOrder(Order order) {
+		this.order = order;
+	}
 	public int getId() {
 		return id;
 	}

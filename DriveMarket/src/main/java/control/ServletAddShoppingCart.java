@@ -95,7 +95,7 @@ public class ServletAddShoppingCart extends HttpServlet {
 					}
 				}
 			}
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pagine/shoppingCart.jsp");
 			dispatcher.forward(request, response);
 			
 		}else {

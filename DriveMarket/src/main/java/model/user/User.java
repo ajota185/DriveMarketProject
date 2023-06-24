@@ -12,7 +12,6 @@ public class User {
 	private String email;
 	private boolean isAdmin;
 	private ShoppingCart shoppingCart;
-	private ArrayList<Order> orders;
 	
 	public User() {
 	}
@@ -65,13 +64,6 @@ public class User {
 	}
 	
 
-	public ArrayList<Order> getOrders() {
-		return orders;
-	}
-
-	public void setOrders(ArrayList<Order> orders) {
-		this.orders = orders;
-	}
 	
 	@Override
 	public boolean equals(Object o) {
