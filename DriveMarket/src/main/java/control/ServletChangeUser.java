@@ -61,7 +61,7 @@ public class ServletChangeUser extends HttpServlet {
 				}
 				
 				userDAO.changeUser(nick,type);
-				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+				response.sendRedirect("ServletHome");
 				
 			}else {
 				errors.add("Nickname doesn't exist.");
@@ -70,7 +70,7 @@ public class ServletChangeUser extends HttpServlet {
 				requestDispatcher.forward(request, response);
 			}
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 	}
 }

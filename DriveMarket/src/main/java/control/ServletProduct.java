@@ -50,7 +50,7 @@ public class ServletProduct extends HttpServlet {
 			RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/WEB-INF/pagine/product.jsp");
 			requestDispatcher.forward(request, response);
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 		
 	

@@ -162,7 +162,7 @@ public class ServletUpdateProduct extends HttpServlet {
 //				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
 			}
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 	}
 	

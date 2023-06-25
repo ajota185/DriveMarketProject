@@ -75,11 +75,14 @@ public class ServletLink extends HttpServlet {
     				request.setAttribute("product", product);
     				pagina="WEB-INF/pagine/updateProduct.jsp";
     			}else {
-    				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+    				response.sendRedirect("ServletHome");
     			}
             	break;
             case "shoppingCart":
             	pagina="WEB-INF/pagine/shoppingCart.jsp";
+            	break;
+            case "orders":
+            	pagina="WEB-INF/pagine/orders.jsp";
             	break;
           /*  default:pagina="webapp/index.jsp";
                 break;*/

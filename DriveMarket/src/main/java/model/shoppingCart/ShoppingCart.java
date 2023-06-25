@@ -12,6 +12,7 @@ public class ShoppingCart {
 	private User user;
 	private ArrayList<Product> products;
 	private ArrayList<Integer> quantity;
+	
 	private Order order;
 	
 	

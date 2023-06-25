@@ -23,6 +23,7 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setDescription(resultSet.getString(4));
                 product.setMain_photo(resultSet.getString(5));
                 product.setLink(resultSet.getString(6));
+                product.setActive(resultSet.getBoolean(7));
                 return product;
             }
         }catch (SQLException sqlException){
@@ -46,6 +47,7 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setDescription(rs.getString(4));
                 product.setMain_photo(rs.getString(5));
                 product.setLink(rs.getString(6));
+                product.setActive(rs.getBoolean(7));
                 lista.add(product);
             }
             connection.close();
@@ -59,8 +61,9 @@ public class ProductDAO implements ProductDAOMethod{
 	public void deleteProduct(int id_prod) {
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
-            ps = connection.prepareStatement("delete from Producto where id_prod=?");
-            ps.setInt(1, id_prod);
+            ps = connection.prepareStatement("update Producto set active=? where id_prod=?");
+            ps.setBoolean(1, false);
+            ps.setInt(2, id_prod);
             ps.execute();
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);

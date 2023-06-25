@@ -72,16 +72,18 @@ public class ServletLogin extends HttpServlet {
 					OrderDAO orderDAO = new OrderDAO();
 					ArrayList<Order> orders= orderDAO.getOrdersByUser(user);
 					ArrayList<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>();
-					for(Order order : orders) {
-						shoppingCarts.add(shoppingCartDAO.getShoppingCartByOrder(order));
+					if(orders!=null) {
+						for(Order order : orders) {
+							shoppingCarts.add(shoppingCartDAO.getShoppingCartByOrder(order));
+						}
+						if(!shoppingCarts.isEmpty()) {
+							user.setOrders(shoppingCarts);
+						}
+						
 					}
-					if(!shoppingCarts.isEmpty()) {
-						user.setOrders(shoppingCarts);
-					}
-					
 					
 					session.setAttribute("user", user);
-					response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+					response.sendRedirect("ServletHome");
 				}else {
 					request.setAttribute("error", "Incorrect Password");
 					RequestDispatcher requestDispatcher = request.getServletContext().getRequestDispatcher("/WEB-INF/pagine/login.jsp");
@@ -94,7 +96,7 @@ public class ServletLogin extends HttpServlet {
 			}
 			
 		}else {
-			 response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 	}
 	

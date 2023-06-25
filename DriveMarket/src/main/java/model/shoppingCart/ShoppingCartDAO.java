@@ -32,6 +32,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
             while (rs.next()){
             	
             	Product product = productDAO.searchProduct(rs.getInt(3));
+            	product.setPrice(rs.getFloat(6));
             	products.add(product);
             	quantity.add(rs.getInt(4));
             	
@@ -52,13 +53,14 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
 	}
 
 	@Override
-	public int addProductToShoppingCart(String nick, int id_prod, int quantity) {
+	public int addProductToShoppingCart(String nick, int id_prod, int quantity, float price) {
 		try(Connection connection=Storage.getConnection()){
 			int res = 0;
-            PreparedStatement ps= connection.prepareStatement("insert into ShoppingCart (id_prod, nick, quantity) values (?,?,?)");
+            PreparedStatement ps= connection.prepareStatement("insert into ShoppingCart (id_prod, nick, quantity, price) values (?,?,?,?)");
             ps.setInt(1,id_prod);
             ps.setString(2,nick);
             ps.setInt(3,quantity);
+            ps.setFloat(4, price);
             ps.execute();
             PreparedStatement ps2= connection.prepareStatement("SELECT * from ShoppingCart");
             ResultSet rs = ps2.executeQuery();
@@ -74,16 +76,17 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
 	}
 
 	@Override
-	public void updateProductToShoppingCart(String nick, int id_prod, int quantity) {
+	public void updateProductToShoppingCart(String nick, int id_prod, int quantity, float price) {
 		// TODO Auto-generated method stub
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
-            ps = connection.prepareStatement("update ShoppingCart set quantity = ? "+
+            ps = connection.prepareStatement("update ShoppingCart set quantity = ?, price=? "+
             "where nick = ? AND id_prod = ? AND id_order IS NULL", Statement.RETURN_GENERATED_KEYS);
             
             ps.setInt(1,quantity);
-            ps.setString(2,nick);
-            ps.setInt(3,id_prod);
+            ps.setFloat(2, price);
+            ps.setString(3,nick);
+            ps.setInt(4,id_prod);
             if(ps.executeUpdate() != 1) {
                 throw new RuntimeException("update error");
             }
@@ -92,6 +95,22 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
         }
 	}
 
+	@Override
+	public void deleteProductToShoppingCart(String nick, int id_prod) {
+		try (Connection connection = Storage.getConnection()) {
+            PreparedStatement ps;
+            ps = connection.prepareStatement("delete from ShoppingCart where nick=? AND id_prod=? AND id_order IS NULL");
+            ps.setString(1, nick);
+            ps.setInt(2, id_prod);
+            
+            ps.execute();
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+		
+	}
+	
+	
 	@Override
 	public void doOrder(String nick, int id_prod, int id_order) {
 		try (Connection connection = Storage.getConnection()) {
@@ -128,6 +147,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
             while (rs.next()){
             	
             	Product product = productDAO.searchProduct(rs.getInt(3));
+            	product.setPrice(rs.getFloat(6));
             	products.add(product);
             	quantity.add(rs.getInt(4));
             	
@@ -147,6 +167,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
         }
         return null;
 	}
+
 
 	
 

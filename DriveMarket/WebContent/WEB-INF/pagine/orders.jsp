@@ -3,9 +3,9 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="model.user.User" %>
 <%@ page import="model.product.Product" %>
+<%@ page import="model.shoppingCart.ShoppingCart" %>
 <%User user = (User) session.getAttribute("user"); %>
-<%ArrayList<Product> products = user.getShoppingCart().getProducts(); %>
-<%ArrayList<Integer> quantity = user.getShoppingCart().getQuantity(); %>
+<% ArrayList<ShoppingCart> shoppingCarts = user.getOrders();%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -27,32 +27,40 @@
 	
 	        <h3 style="text-align:left;">Products in the ShoppingCart</h3>
 	        <div class="lista-productos">
-	        	<%float total=0; %>
-	            <%for(int i=0; i<products.size(); i++){ %>
-	            	<%if(quantity.get(i)>0){ %>
-	            		<%total+=(quantity.get(i)*products.get(i).getPrice()); %>
+	            <%for(int i=0; i<shoppingCarts.size(); i++){ %>
 	                    <div class="producto-lista">
-	                        <div class="imagen-producto-lista">
-	                            <a href=<%= "ServletProduct?id_prod="+products.get(i).getId_prod()%>>
-	                                <img src=<%= products.get(i).getMain_photo() %>>
-	                            </a>
-	                        </div>
-	
 	                        <div class="informacion-producto-lista">
-	                            <a href=<%= "ServletProduct?id_prod="+products.get(i).getId_prod()%>>
-	                                <h3><%=products.get(i).getName() %></h3>
-	                            </a>
-	                            <p>Prize: <%=products.get(i).getPrice() %> €</p>
-	                            <p>Quantity: <%=quantity.get(i) %></p>
+	                            
+                                <h3>ID: <%=shoppingCarts.get(i).getOrder().getId_order() %></h3>
+	                            <b>Date: <%=shoppingCarts.get(i).getOrder().getDate() %></b><br>
+	                        	<b>Products:</b>
+	                        	<%float total=0; %> 
+	                        	<%for(int j=0; j<shoppingCarts.get(i).getProducts().size(); j++){ %>
+	                        		<%Product product = shoppingCarts.get(i).getProducts().get(j); %>
+	                        		<%total+=product.getPrice()*shoppingCarts.get(i).getQuantity().get(j); %>
+	                        		<div class="producto-lista-order">
+			                        	<div class="imagen-producto-lista">
+				                            <a href=<%= "ServletProduct?id_prod="+product.getId_prod()%>>
+				                                <img src=<%= product.getMain_photo() %>>
+				                            </a>
+				                        </div>
+				
+				                        <div class="informacion-producto-lista">
+				                            <a href=<%= "ServletProduct?id_prod="+product.getId_prod()%>>
+				                                <h3><%=product.getName() %></h3>
+				                            </a>
+				                            <p>Price: <%=product.getPrice() %> €</p>
+				                            <p>Quantity: <%=shoppingCarts.get(i).getQuantity().get(j) %></p>
+				                        </div>
+			                        </div>
+		                        <%} %>
+		                        <h3 style="text-align:left;">Total: <%=total %> €</h3>
+		                        
 	                        </div>
 	                    </div>
-                    <%} %>
 	            <%} %>
 	
 	        </div>
-	        <h3 style="text-align:left;">Total: <%=total %> €</h3>
-	        <a href="ServletAddOrder"><button >Buy</button></a>
-	
 	    </div>
 		
 

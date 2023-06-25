@@ -67,7 +67,7 @@ public class ServletAddShoppingCart extends HttpServlet {
 						
 						
 						ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
-						shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity);
+						shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity, product.getPrice());
 						user.setShoppingCart(shoppingCart);
 					}else {
 						ShoppingCart shoppingCart = user.getShoppingCart();
@@ -75,12 +75,12 @@ public class ServletAddShoppingCart extends HttpServlet {
 							int index =shoppingCart.getProducts().indexOf(product);
 							shoppingCart.getQuantity().set(index, quantity);
 							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
-							shoppingCartDAO.updateProductToShoppingCart(user.getNickName(), id_prod, quantity);
+							shoppingCartDAO.updateProductToShoppingCart(user.getNickName(), id_prod, quantity, product.getPrice());
 						}else {
 							shoppingCart.getProducts().add(product);
 							shoppingCart.getQuantity().add(quantity);
 							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
-							shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity);
+							shoppingCartDAO.addProductToShoppingCart(user.getNickName(), id_prod, quantity, product.getPrice());
 						}
 					}
 				}else {
@@ -88,13 +88,21 @@ public class ServletAddShoppingCart extends HttpServlet {
 						ShoppingCart shoppingCart = user.getShoppingCart();
 						if(shoppingCart.getProducts().contains(product)) {
 							int index =shoppingCart.getProducts().indexOf(product);
-							shoppingCart.getQuantity().set(index, quantity);
+							shoppingCart.getProducts().remove(index);
+							shoppingCart.getQuantity().remove(index);
+							
 							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
-							shoppingCartDAO.updateProductToShoppingCart(user.getNickName(), id_prod, quantity);
+							shoppingCartDAO.deleteProductToShoppingCart(user.getNickName(), id_prod);
+							
+							
+							
+							if(shoppingCart.getProducts().isEmpty()) {
+								user.setShoppingCart(null);
+								response.sendRedirect("ServletHome");
+							}
 						}
 					}else {
-						RequestDispatcher dispatcher2 = getServletContext().getRequestDispatcher("/index.jsp");
-						dispatcher2.forward(request, response);
+						response.sendRedirect("ServletHome");
 					}
 				}
 			}
@@ -102,7 +110,7 @@ public class ServletAddShoppingCart extends HttpServlet {
 			dispatcher.forward(request, response);
 			
 		}else {
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("ServletHome");
 		}
 		
 	}

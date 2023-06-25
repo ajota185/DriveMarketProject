@@ -48,11 +48,9 @@ public class ServletDeleteProduct extends HttpServlet {
 				ImageDAO imageDAO = new ImageDAO();
 				imageDAO.deleteImages(id_prod);
 				productDAO.deleteProduct(id_prod);
-				response.sendRedirect("ServletHome");
 			}
-		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
 		}
+		response.sendRedirect("ServletHome");
 	
 	}
 

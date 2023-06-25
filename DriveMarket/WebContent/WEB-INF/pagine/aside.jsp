@@ -5,7 +5,7 @@
 <%User user= (User) session.getAttribute("user"); %>
 
 <aside>
-	<h2>Opciones de Usuario</h2>
+	<h2>Options of User</h2>
 	<ul>
 		<%if(user == null){ %>
 			<li>
@@ -16,6 +16,11 @@
 			<li>
 				<a href="ServletLink?option=updateUser">My Account</a>
 			</li>
+			<%if(user.getOrders()!=null){ %>
+				<li>
+					<a href="ServletLink?option=orders">Orders</a>
+				</li>
+			<%} %>
 			<li>
 				<a href="ServletLogout">Logout</a>
 			</li>
@@ -28,6 +33,9 @@
 				</li>
 				<li>
 					<a href="ServletLink?option=insertProduct">Add Product</a>
+				</li>
+				<li>
+					<a href="ServletOrders">See all the Orders</a>
 				</li>
 			<%} %>
 		<%} %>

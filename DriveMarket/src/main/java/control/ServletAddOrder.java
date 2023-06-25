@@ -3,6 +3,7 @@ package control;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
@@ -22,7 +23,7 @@ import model.user.User;
 /**
  * Servlet implementation class ServletAddOrder
  */
-@WebServlet("/ServletAddOrder")
+@WebServlet(name="/ServletAddOrder", value="/ServletAddOrder")
 public class ServletAddOrder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,10 +43,8 @@ public class ServletAddOrder extends HttpServlet {
 		User user=(User) session.getAttribute("user");
 		if(user!=null && !user.isAdmin() && user.getShoppingCart()!=null) {
 			Order order = new Order();
-			Date date = new Date(System.currentTimeMillis());
+			Timestamp date = new Timestamp(System.currentTimeMillis());
 			order.setDate(date);
-			Time time = new Time(System.currentTimeMillis());
-			order.setHour(time);
 			order.setUser(user);
 			
 			
@@ -69,10 +68,10 @@ public class ServletAddOrder extends HttpServlet {
 			user.getOrders().add(user.getShoppingCart());
 			user.setShoppingCart(null);
 			
-			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");
+			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pagine/orders.jsp");
 			dispatcher.forward(request, response);
 		}else {
-			response.sendRedirect("index.jsp");
+			response.sendRedirect("ServletHome");
 		}
 		
 		

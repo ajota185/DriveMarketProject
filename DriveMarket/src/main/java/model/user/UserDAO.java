@@ -1,11 +1,11 @@
 package model.user;
 
+import model.product.Product;
 import model.storage.Storage;
 
 
 import java.sql.*;
-
-
+import java.util.ArrayList;
 import java.util.Optional;
 
 public class UserDAO implements UserDAOMethod{
@@ -87,6 +87,28 @@ public class UserDAO implements UserDAOMethod{
 			throw new RuntimeException(sqlException);
 		}
 		
+	}
+
+	@Override
+	public ArrayList<User> getAllUsers() {
+		try (Connection connection = Storage.getConnection()) {
+            PreparedStatement ps;
+            ps = connection.prepareStatement("select * from Usuario");
+            ResultSet rs = ps.executeQuery();
+            ArrayList<User> lista = new ArrayList<>();
+            while (rs.next()) {
+                User user= new User();
+                user.setNickName(rs.getString(1));
+                user.setPassw(rs.getString(2));
+                user.setEmail(rs.getString(3));
+                user.setAdmin(rs.getBoolean(4));
+                lista.add(user);
+            }
+            connection.close();
+            return lista;
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
 	}
 
 }

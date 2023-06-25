@@ -1,9 +1,11 @@
 package model.order;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import model.product.Product;
@@ -24,8 +26,7 @@ public class OrderDAO implements OrderDAOMethod{
             if(resultSet.next()){
                 Order order= new Order();
                 order.setId_order(resultSet.getInt(1));
-                order.setDate(resultSet.getDate(2));
-                order.setHour(resultSet.getTime(3));
+                order.setDate(resultSet.getTimestamp(2));
                 return order;
             }
         }catch (SQLException sqlException){
@@ -38,10 +39,9 @@ public class OrderDAO implements OrderDAOMethod{
 	public int addOrder(Order o) {
 		try(Connection connection=Storage.getConnection()){
 			int res = 0;
-            PreparedStatement ps= connection.prepareStatement("insert into Pedido (date,time,nick) values (?,?,?)");
-            ps.setDate(1,o.getDate());
-            ps.setTime(2,o.getHour());
-            ps.setString(3, o.getUser().getNickName());
+            PreparedStatement ps= connection.prepareStatement("insert into Pedido (date,nick) values (?,?)");
+            ps.setTimestamp(1,o.getDate());
+            ps.setString(2, o.getUser().getNickName());
             ps.execute();
             PreparedStatement ps2= connection.prepareStatement("SELECT * from Pedido");
             ResultSet rs = ps2.executeQuery();
@@ -69,8 +69,37 @@ public class OrderDAO implements OrderDAOMethod{
             while (rs.next()){
             	Order order = new Order();
             	order.setId_order(rs.getInt(1));
-            	order.setDate(rs.getDate(2));
-            	order.setHour(rs.getTime(3));
+            	order.setDate(rs.getTimestamp(2));
+            	order.setUser(u);
+            	orders.add(order);
+            }
+            
+            if(!orders.isEmpty()) {
+            	return  orders;
+            }
+            
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+        return null;
+	}
+
+	@Override
+	public ArrayList<Order> getOrdersByUserAndDate(User u, Timestamp date_s, Timestamp date_t) {
+		try(Connection connection= Storage.getConnection()){
+			ArrayList<Order> orders = new ArrayList<Order>();
+            PreparedStatement ps;
+            ps=connection.prepareStatement("select * from Pedido where nick=? AND (? <=date AND date<=?)");
+            ps.setString(1, u.getNickName());
+            ps.setTimestamp(2, date_s);
+            ps.setTimestamp(3, date_t);
+
+            ResultSet rs=ps.executeQuery();
+            
+            while (rs.next()){
+            	Order order = new Order();
+            	order.setId_order(rs.getInt(1));
+            	order.setDate(rs.getTimestamp(2));
             	order.setUser(u);
             	orders.add(order);
             }

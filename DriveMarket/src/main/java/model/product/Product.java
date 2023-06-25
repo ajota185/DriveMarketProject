@@ -11,7 +11,9 @@ public class Product {
 	private String description;
 	private String main_photo;
 	private String link;
+	private boolean active;
 	
+
 	public Product() {
 		
 	}
@@ -23,6 +25,13 @@ public class Product {
 		this.description = description;
 		this.main_photo = main_photo;
 		this.link = link;
+	}
+	public boolean isActive() {
+		return active;
+	}
+	
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public int getId_prod() {

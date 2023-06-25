@@ -147,8 +147,7 @@ public class ServletInsertProduct extends HttpServlet {
 				
 				
 				
-				getServletContext().setAttribute("products", productDAO.getAllProducts());
-				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+				response.sendRedirect("ServletHome");
 			}else {
 				request.setAttribute("errors", errors);
 				RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/WEB-INF/pagine/insertProduct.jsp");
@@ -156,7 +155,7 @@ public class ServletInsertProduct extends HttpServlet {
 			}
 			
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 		
 		

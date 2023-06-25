@@ -57,7 +57,7 @@ public class ServletDeleteUser extends HttpServlet {
 					session.removeAttribute("user");
 				}
 				userDAO.deleteUser(nick);
-				response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+				response.sendRedirect("ServletHome");
 				
 			}else {
 				errors.add("Nickname doesn't exist.");
@@ -66,7 +66,7 @@ public class ServletDeleteUser extends HttpServlet {
 				requestDispatcher.forward(request, response);
 			}
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 	}
 

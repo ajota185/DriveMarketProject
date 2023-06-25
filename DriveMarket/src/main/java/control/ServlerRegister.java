@@ -80,7 +80,7 @@ public class ServlerRegister extends HttpServlet {
 				try {
 					userDAO.insertUser(user);
 					session.setAttribute("user", user);
-					response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+					response.sendRedirect("ServletHome");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					errors.add("User exists.");
@@ -96,7 +96,7 @@ public class ServlerRegister extends HttpServlet {
 				requestDispatcher.forward(request, response);
 			}
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 			
 	}

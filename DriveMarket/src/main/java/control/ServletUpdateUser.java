@@ -82,7 +82,7 @@ public class ServletUpdateUser extends HttpServlet {
 				try {
 					userDAO.updateUser(usern, user.getNickName());
 					session.setAttribute("user", usern);
-					response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+					response.sendRedirect("ServletHome");
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					errors.add(e.getMessage());
@@ -97,7 +97,7 @@ public class ServletUpdateUser extends HttpServlet {
 				requestDispatcher.forward(request, response);
 			}
 		}else {
-			response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
+			response.sendRedirect("ServletHome");
 		}
 	}
 	
