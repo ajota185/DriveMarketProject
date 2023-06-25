@@ -92,6 +92,9 @@ public class ServletAddShoppingCart extends HttpServlet {
 							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
 							shoppingCartDAO.updateProductToShoppingCart(user.getNickName(), id_prod, quantity);
 						}
+					}else {
+						RequestDispatcher dispatcher2 = getServletContext().getRequestDispatcher("/index.jsp");
+						dispatcher2.forward(request, response);
 					}
 				}
 			}

@@ -11,7 +11,10 @@ public class Order {
 	private int id_order;
 	private Date date;
 	private Time hour;
+	private User user;
 	
+
+
 	public Order() { }
 	
 	
@@ -21,6 +24,14 @@ public class Order {
 		this.hour = hour;
 	}
 	
+	public User getUser() {
+		return user;
+	}
+	
+	
+	public void setUser(User user) {
+		this.user = user;
+	}
 	public int getId_order() {
 		return id_order;
 	}

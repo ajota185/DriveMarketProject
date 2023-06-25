@@ -2,6 +2,7 @@ package control;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import model.order.OrderDAO;
+import model.order.Order;
 import model.shoppingCart.ShoppingCart;
 import model.shoppingCart.ShoppingCartDAO;
 import model.user.User;
@@ -65,6 +68,18 @@ public class ServletLogin extends HttpServlet {
 					if(shoppingCart!=null) {
 						user.setShoppingCart(shoppingCart);
 					}
+					
+					OrderDAO orderDAO = new OrderDAO();
+					ArrayList<Order> orders= orderDAO.getOrdersByUser(user);
+					ArrayList<ShoppingCart> shoppingCarts = new ArrayList<ShoppingCart>();
+					for(Order order : orders) {
+						shoppingCarts.add(shoppingCartDAO.getShoppingCartByOrder(order));
+					}
+					if(!shoppingCarts.isEmpty()) {
+						user.setOrders(shoppingCarts);
+					}
+					
+					
 					session.setAttribute("user", user);
 					response.sendRedirect(response.encodeRedirectURL(request.getContextPath()+"/index.jsp"));
 				}else {

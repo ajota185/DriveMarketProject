@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import model.order.Order;
 import model.product.Product;
 import model.product.ProductDAO;
 import model.storage.Storage;
@@ -20,7 +21,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
 		try(Connection connection= Storage.getConnection()){
 
             PreparedStatement ps;
-            ps=connection.prepareStatement("select * from ShoppingCart where nick=?");
+            ps=connection.prepareStatement("select * from ShoppingCart where nick=? and id_order IS NULL");
             ps.setString(1, u.getNickName());
 
             ResultSet rs=ps.executeQuery();
@@ -78,7 +79,7 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
 		try (Connection connection = Storage.getConnection()) {
             PreparedStatement ps;
             ps = connection.prepareStatement("update ShoppingCart set quantity = ? "+
-            "where nick = ? AND id_prod = ?", Statement.RETURN_GENERATED_KEYS);
+            "where nick = ? AND id_prod = ? AND id_order IS NULL", Statement.RETURN_GENERATED_KEYS);
             
             ps.setInt(1,quantity);
             ps.setString(2,nick);
@@ -108,6 +109,43 @@ public class ShoppingCartDAO implements ShoppingCartDAOMethod
             throw new RuntimeException(sqlException);
         }
 		
+	}
+
+	@Override
+	public ShoppingCart getShoppingCartByOrder(Order o) {
+		try(Connection connection= Storage.getConnection()){
+
+            PreparedStatement ps;
+            ps=connection.prepareStatement("select * from ShoppingCart where nick=? and id_order=?");
+            ps.setString(1, o.getUser().getNickName());
+            ps.setInt(2, o.getId_order());
+
+            ResultSet rs=ps.executeQuery();
+            ArrayList<Product> products = new ArrayList<Product>();
+            ArrayList<Integer> quantity = new ArrayList<Integer>();
+            ProductDAO productDAO = new ProductDAO();
+            
+            while (rs.next()){
+            	
+            	Product product = productDAO.searchProduct(rs.getInt(3));
+            	products.add(product);
+            	quantity.add(rs.getInt(4));
+            	
+            }
+            
+            if(!products.isEmpty()) {
+            	ShoppingCart shoppingCart = new ShoppingCart();
+            	shoppingCart.setProducts(products);
+            	shoppingCart.setQuantity(quantity);
+            	shoppingCart.setUser(o.getUser());
+            	shoppingCart.setOrder(o);
+            	return  shoppingCart;
+            }
+            
+        }catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+        return null;
 	}
 
 	

@@ -3,6 +3,7 @@ package control;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import model.order.Order;
 import model.order.OrderDAO;
+import model.shoppingCart.ShoppingCart;
 import model.shoppingCart.ShoppingCartDAO;
 import model.user.User;
 
@@ -44,6 +46,7 @@ public class ServletAddOrder extends HttpServlet {
 			order.setDate(date);
 			Time time = new Time(System.currentTimeMillis());
 			order.setHour(time);
+			order.setUser(user);
 			
 			
 			
@@ -53,11 +56,17 @@ public class ServletAddOrder extends HttpServlet {
 			
 			user.getShoppingCart().setOrder(order);
 			
+			
+			
 			ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
 			for(int i=0; i<user.getShoppingCart().getProducts().size(); i++) {
 				shoppingCartDAO.doOrder(user.getNickName(),user.getShoppingCart().getProducts().get(i).getId_prod(), id_order);
 			}
 			
+			if(user.getOrders()==null) {
+				user.setOrders(new ArrayList<ShoppingCart>());
+			}
+			user.getOrders().add(user.getShoppingCart());
 			user.setShoppingCart(null);
 			
 			RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/index.jsp");

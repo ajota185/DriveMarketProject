@@ -12,7 +12,9 @@ public class User {
 	private String email;
 	private boolean isAdmin;
 	private ShoppingCart shoppingCart;
+	private ArrayList<ShoppingCart> orders;
 	
+
 	public User() {
 	}
 	
@@ -63,6 +65,13 @@ public class User {
 		this.shoppingCart = shoppingCart;
 	}
 	
+	public ArrayList<ShoppingCart> getOrders() {
+		return orders;
+	}
+	
+	public void setOrders(ArrayList<ShoppingCart> orders) {
+		this.orders = orders;
+	}
 
 	
 	@Override
