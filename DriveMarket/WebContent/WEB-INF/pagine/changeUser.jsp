@@ -43,7 +43,7 @@ ArrayList<User> users = userDAO.getAllUsers();
 	            	<%for(User u : users){ %>
 		                <option value="<%=u.getNickName() %>"><%=u.getNickName() %></option>
 	                <%} %>
-	            </select><br>
+	            </select><br><br>
 	            Type of user:<br>
 	            <select name="type_user">
 	                <option value="normal">Normal user</option>

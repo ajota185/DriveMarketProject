@@ -230,81 +230,18 @@ footer{
     color: rgb(255, 255, 255);
 }
 
-/* Formularios */
-.apartado-forms{
-	width: 100%;
-	display:none;
-}
-
-
-.content-forms{
-	width: 50%;
-	margin-left: 25%;
-	color: black;
-}
-
-.form{
-	background-color: white;
-	margin: 3%;
-	padding: 2%;
-}
-
-.titulo-hora{
-	font-weight: bolder;
-	margin-bottom: 2%;
-	text-align: center;
-}
-
-.form span{
-	display: block;
-}
-
-
-/* Nuevos Comentarios y Formulario */
-.coments-new-form{
-	width: 100%;
-	height: auto;
-	text-align: center;
-
-}
-
-.new-form{
-	text-align: center;
-	margin: 3%;
-}
 
 
 
-.new-form input{
-	width: 50%;
-	height: 1.5em;
-	margin-bottom: 2%;
-}
-
-
+/* Descripcion */
 textarea{
 	width: 30em;
 	height: 10em;
 	margin-bottom: 1em;
 }
 
-.new-form label{
-
-	display: block;
-}
-
-.enviar{
-	margin-top: 1em;
-	width: 15em;
-}
 
 
-
-
-/* Dialogo */
-dialog{
-	text-align: center;
-}
 
 
 /* Estilos de login */
@@ -386,63 +323,12 @@ dialog{
 }
 
 
-/* Editar Comentario */
-.content-editar-comentario{
-	height: auto;
-	width: 75%;
-	border-radius: 10px;
-	text-align: center;
-	padding-top: 3em;
-}
-
-
-/* Borrar Comentario */
-.content-borrar-comentario{
-	height: auto;
-	width: 75%;
-	border-radius: 10px;
-	text-align: center;
-	padding-top: 3em;
-}
-
-/* Lista Comentarios */
-.lista-comentarios{
-	width: 75%;
-	text-align: center;
-	color: white;
-}
-
-.content-lista-comentarios{
-	padding-left: 10%;
-	padding-right: 10%;
-	color: black;
-	text-align: left;
-}
-
-.boton-buscador{
-	cursor: pointer; 
-	color: white; 
-	border: none;  
-	background-color: transparent;
-}
 
 
 
-/* Estilos de buscador comentario */
-.content-buscador{
-	height: auto;
-	width: 75%;
-	border-radius: 10px;
-	text-align: center;
-	padding-top: 3em;
-}
-
-.content-registro input{
-	margin-bottom: 1em;
-}
 
 
-/* Lista Comentarios */
+/* Lista Productos */
 .content-lista-productos{
 	width: 75%;
 	text-align: center;
@@ -523,24 +409,7 @@ input{
 }
 
 
-/* Borrar Producto */
-.content-borrar-producto{
-	height: auto;
-	width: 75%;
-	border-radius: 10px;
-	text-align: center;
-	padding-top: 3em;
-}
 
-
-/* Editar Pie Imagen */
-.content-editar-pie{
-	height: auto;
-	width: 75%;
-	border-radius: 10px;
-	text-align: center;
-	padding-top: 3em;
-}
 
 
 

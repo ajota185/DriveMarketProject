@@ -48,7 +48,6 @@ public class ServletDeleteUser extends HttpServlet {
 		
 		if(user!=null && user.isAdmin()) {
 			String nick = request.getParameter("nick");
-			String admin = request.getParameter("type_user");
 			List<String> errors = new ArrayList<>();
 			UserDAO userDAO = new UserDAO();
 			User usern = userDAO.searchUser(nick);

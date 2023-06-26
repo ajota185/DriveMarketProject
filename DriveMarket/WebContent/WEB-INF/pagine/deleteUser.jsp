@@ -1,9 +1,14 @@
 <%@ page import="model.user.User" %>
+<%@ page import="model.user.UserDAO" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
     
-<%User user = (User) session.getAttribute("user"); %>
+<%User user = (User) session.getAttribute("user"); 
+UserDAO userDAO = new UserDAO();
+ArrayList<User> users = userDAO.getAllUsers();
+%>
 
 <!DOCTYPE html>
 <html>
@@ -34,7 +39,11 @@
 	          
 	        <form action="ServletDeleteUser" method="post">
 	            Nick:<br>
-	            <input type="text" name="nick" /><br>
+	            <select name="nick">
+	            	<%for(User u : users){ %>
+		                <option value="<%=u.getNickName() %>"><%=u.getNickName() %></option>
+	                <%} %>
+	            </select><br>
 	            <br>
 	            <input type="submit" value="Delete" />
         	</form>

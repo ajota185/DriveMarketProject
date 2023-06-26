@@ -33,9 +33,9 @@ public class ServletLogout extends HttpServlet {
 		User user=(User) session.getAttribute("user");
 		if(user!=null) {
 			session.removeAttribute("user");
-			response.sendRedirect("ServletHome");
 		}
 		
+		response.sendRedirect("ServletHome");
        
 	}
 

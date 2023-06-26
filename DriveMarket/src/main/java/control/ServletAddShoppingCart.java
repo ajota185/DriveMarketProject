@@ -97,7 +97,7 @@ public class ServletAddShoppingCart extends HttpServlet {
 							ShoppingCartDAO shoppingCartDAO = new ShoppingCartDAO();
 							shoppingCartDAO.deleteProductToShoppingCart(user.getNickName(), id_prod);
 							
-							System.out.println(shoppingCart.getProducts().size()+" "+shoppingCart.getProducts().isEmpty());
+							
 							
 							if(shoppingCart.getProducts().isEmpty()) {
 								user.setShoppingCart(null);
