@@ -12,7 +12,7 @@
 				<a href="ServletLink?option=login">Login</a>
 			</li>
 		<%}else{ %>
-			<li>Usuario: <%= user.getNickName() %></li>
+			<li>User: <%= user.getNickName() %></li>
 			<li>
 				<a href="ServletLink?option=updateUser">My Account</a>
 			</li>
@@ -46,17 +46,17 @@
 		
 	</ul>
 	<br><br>
-	<h2>Descripción</h2>
+	<h2>Description</h2>
 	
 	<ul>
 		<li>
-			<a href="index.php">Nuestra historia</a>
+			<a href="ServletHome">Our history</a>
 		</li>
 		<li>
-			<a href="index.php">Modelos Antiguos</a>
+			<a href="ServletHome">Old models</a>
 		</li>
          	</ul>
 
 	<br>
-	<p>Página dedicada a ofrecer información sobre los diversos productos que ofrece la marca Tesla.</p>
+	<p>Page dedicated to offer information on the various products offered by the Tesla brand.</p>
 </aside>

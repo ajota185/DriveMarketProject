@@ -10,13 +10,16 @@ public class ProductDAO implements ProductDAOMethod{
 
 	@Override
 	public Product searchProduct(int id_prod) {
-		try(Connection connection= Storage.getConnection()){
-            PreparedStatement preparedStatement;
-            preparedStatement=connection.prepareStatement("select * from Producto where id_prod=?");
-            preparedStatement.setInt(1,id_prod);
-            ResultSet resultSet=preparedStatement.executeQuery();
+		Connection connection = null;
+		PreparedStatement ps = null;
+		Product product = null;
+		try{
+			connection = Storage.getConnection();
+            ps=connection.prepareStatement("select * from Producto where id_prod=?");
+            ps.setInt(1,id_prod);
+            ResultSet resultSet=ps.executeQuery();
             if(resultSet.next()){
-                Product product= new Product();
+                product= new Product();
                 product.setId_prod(resultSet.getInt(1));
                 product.setName(resultSet.getString(2));
                 product.setPrice(resultSet.getFloat(3));
@@ -24,21 +27,37 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setMain_photo(resultSet.getString(5));
                 product.setLink(resultSet.getString(6));
                 product.setActive(resultSet.getBoolean(7));
-                return product;
+                
             }
         }catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
-        }
-        return null;
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+        return product;
 	}
 
 	@Override
 	public ArrayList<Product> getAllProducts() {
-		try (Connection connection = Storage.getConnection()) {
-            PreparedStatement ps;
-            ps = connection.prepareStatement("select * from Producto");
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ArrayList<Product> lista = new ArrayList<>();
+		try  {
+			connection = Storage.getConnection();
+            
+            ps = connection.prepareStatement("select * from Producto WHERE active=TRUE");
             ResultSet rs = ps.executeQuery();
-            ArrayList<Product> lista = new ArrayList<>();
             while (rs.next()) {
                 Product product= new Product();
                 product.setId_prod(rs.getInt(1));
@@ -50,39 +69,71 @@ public class ProductDAO implements ProductDAOMethod{
                 product.setActive(rs.getBoolean(7));
                 lista.add(product);
             }
-            connection.close();
-            return lista;
+            
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
-        }
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return lista;
+		
 	}
 
 	@Override
 	public void deleteProduct(int id_prod) {
-		try (Connection connection = Storage.getConnection()) {
-            PreparedStatement ps;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try  {
+			connection = Storage.getConnection();
             ps = connection.prepareStatement("update Producto set active=? where id_prod=?");
             ps.setBoolean(1, false);
             ps.setInt(2, id_prod);
             ps.execute();
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
-        }
-		
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	@Override
 	public int insertProduct(Product p) {
-		try(Connection connection=Storage.getConnection()){
-			int res = 0;
-            PreparedStatement ps= connection.prepareStatement("insert into Producto (nombre, precio, descripcion, foto_portada, enlace) values (?,?,?,?,?)");
+		Connection connection = null;
+		PreparedStatement ps = null;
+		PreparedStatement ps2 = null;
+		int res = 0;
+		try{
+			connection=Storage.getConnection();
+            ps= connection.prepareStatement("insert into Producto (nombre, precio, descripcion, foto_portada, enlace) values (?,?,?,?,?)");
             ps.setString(1,p.getName());
             ps.setDouble(2,p.getPrice());
             ps.setString(3,p.getDescription());
             ps.setString(4,p.getMain_photo());
             ps.setString(5,p.getLink());
             ps.execute();
-            PreparedStatement ps2= connection.prepareStatement("SELECT * from Producto");
+            ps2 = connection.prepareStatement("SELECT * from Producto");
             ResultSet rs = ps2.executeQuery();
             while(rs.next()) {
             	res = rs.getInt(1);
@@ -91,14 +142,32 @@ public class ProductDAO implements ProductDAOMethod{
 		
 		}catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
-        }
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+				if(ps2!=null)
+					ps2.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		
 	}
 
 	@Override
 	public void updateProduct(Product p, int id_prod) {
-		try (Connection connection = Storage.getConnection()) {
-            PreparedStatement ps;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try  {
+			connection = Storage.getConnection();
+            
             ps = connection.prepareStatement("update Producto set nombre = ?, precio = ?," +
                     "descripcion = ?, foto_portada = ?, enlace = ?" +
                     "where id_prod = ?", Statement.RETURN_GENERATED_KEYS);
@@ -114,8 +183,63 @@ public class ProductDAO implements ProductDAOMethod{
             }
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
-        }
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		
+	}
+
+	@Override
+	public ArrayList<Product> getProductsByText(String text) {
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ArrayList<Product> lista = new ArrayList<>();
+		try  {
+			connection = Storage.getConnection();
+            ps = connection.prepareStatement("select * from Producto WHERE nombre LIKE ?");
+            text="%"+text+"%";
+            ps.setString(1, text);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product= new Product();
+                product.setId_prod(rs.getInt(1));
+                product.setName(rs.getString(2));
+                product.setPrice(rs.getFloat(3));
+                product.setDescription(rs.getString(4));
+                product.setMain_photo(rs.getString(5));
+                product.setLink(rs.getString(6));
+                product.setActive(rs.getBoolean(7));
+                lista.add(product);
+            }
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return lista;
 	}
 
 	

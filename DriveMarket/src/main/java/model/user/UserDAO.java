@@ -12,36 +12,68 @@ public class UserDAO implements UserDAOMethod{
 
 	@Override
 	public User searchUser(String nickName) {
-		try(Connection connection= Storage.getConnection()){
+		Connection connection = null;
+		PreparedStatement ps = null;
+		User user = null;
+		try{
+			connection= Storage.getConnection();
 
-            PreparedStatement ps;
             ps=connection.prepareStatement("select * from Usuario where nick=?");
             ps.setString(1, nickName);
 
             ResultSet rs=ps.executeQuery();
             if (rs.next()){
-                User user= new User();
+                user= new User();
                 user.setNickName(rs.getString(1));
                 user.setPassw(rs.getString(2));
                 user.setEmail(rs.getString(3));
                 user.setAdmin(rs.getBoolean(4));
-                return user;
             }
         }catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
-        }
-        return null;
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+        return user;
 	}
 
 	@Override
 	public void deleteUser(String nickName) {
-		try(Connection connection=Storage.getConnection()){
-            PreparedStatement ps = connection.prepareStatement("delete from Usuario where nick=?");
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try{
+			connection=Storage.getConnection();
+            ps = connection.prepareStatement("delete from Usuario where nick=?");
             ps.setString(1, nickName);
             ps.execute();
         }catch (SQLException sqlException){
             throw new RuntimeException(sqlException);
-        }
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		
 	}
 
@@ -55,6 +87,14 @@ public class UserDAO implements UserDAOMethod{
             ps.setString(3, u.getEmail());
             ps.setBoolean(4, u.isAdmin());
             ps.execute();
+            
+            try {
+				if (ps != null)
+					ps.close();
+			} finally {
+				Storage.releaseConnection(connection);
+				
+			}
 	}
 
 	@Override
@@ -69,13 +109,23 @@ public class UserDAO implements UserDAOMethod{
             ps.setBoolean(4, u.isAdmin());
             ps.setString(5, nickName);
             ps.executeUpdate();
+            
+            try {
+				if (ps != null)
+					ps.close();
+			} finally {
+				Storage.releaseConnection(connection);
+				
+			}
 		
 	}
 
 	@Override
 	public void changeUser(String nick, boolean type){
-		try(Connection connection = Storage.getConnection()){
-	        PreparedStatement ps;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		try{
+			connection = Storage.getConnection();
 	        ps = connection.prepareStatement("update Usuario set admin = ? " +
 	                "where nick = ?", Statement.RETURN_GENERATED_KEYS);
 	        
@@ -85,17 +135,32 @@ public class UserDAO implements UserDAOMethod{
 		} catch (SQLException sqlException) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(sqlException);
+		}finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
 	}
 
 	@Override
 	public ArrayList<User> getAllUsers() {
-		try (Connection connection = Storage.getConnection()) {
-            PreparedStatement ps;
+		Connection connection = null;
+		PreparedStatement ps = null;
+		ArrayList<User> lista = new ArrayList<>();
+		try {
+			connection = Storage.getConnection();
             ps = connection.prepareStatement("select * from Usuario");
             ResultSet rs = ps.executeQuery();
-            ArrayList<User> lista = new ArrayList<>();
             while (rs.next()) {
                 User user= new User();
                 user.setNickName(rs.getString(1));
@@ -104,11 +169,23 @@ public class UserDAO implements UserDAOMethod{
                 user.setAdmin(rs.getBoolean(4));
                 lista.add(user);
             }
-            connection.close();
-            return lista;
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
-        }
+        }finally {
+			try {
+				if (ps != null)
+					ps.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					Storage.releaseConnection(connection);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return lista;
 	}
 
 }

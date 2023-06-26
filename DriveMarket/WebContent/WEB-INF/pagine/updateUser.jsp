@@ -35,7 +35,7 @@
 	        <form action="ServletUpdateUser" method="post">
 	            Nick:<br>
 	            <input type="text" name="nick" value="<%= user.getNickName() %>" /><br>
-	            Password: (Introduce una nueva o la actual si no quiere cambiarla).<br>
+	            Password: (Enter a new one or the current one if you do not want to change it).<br>
 	            <input type="password" name="password" /><br>
 	            Email:<br>
 	            <input class="email" type="email" name="email" value="<%=user.getEmail() %>" /><br>

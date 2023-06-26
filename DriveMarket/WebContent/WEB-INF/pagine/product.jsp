@@ -72,7 +72,7 @@
 								}
 							%>
 							<form action="ServletAddShoppingCart" method="post">
-					            Id_prod:<br>
+					            ID of the Product:<br>
 					            <input type="text" name="id_prod" value="<%=product.getId_prod() %>" readonly/><br>
 					            Quantity:<br>
 					            <input type="number" name="quantity" value="<%=quantity %>" min="0"/><br>

@@ -21,11 +21,11 @@
 	
 		<div class="content-lista-productos">
 
-	        <h2>Shopping Cart</h2>
+	        <h2>Orders</h2>
 	        
 	
 	
-	        <h3 style="text-align:left;">Products in the ShoppingCart</h3>
+	        <h3 style="text-align:left;">All of your Orders</h3>
 	        <div class="lista-productos">
 	            <%for(int i=0; i<shoppingCarts.size(); i++){ %>
 	                    <div class="producto-lista">

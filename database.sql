@@ -5,9 +5,9 @@
 
 
 /* Borramos las tablas en caso de estar ya creadas */
+DROP TABLE IF EXISTS ShoppingCart;
+DROP TABLE IF EXISTS Pedido;
 DROP TABLE IF EXISTS Usuario;
-DROP TABLE IF EXISTS PalabrasProhibidas;
-DROP TABLE IF EXISTS Comentario;
 DROP TABLE IF EXISTS Imagenes;
 DROP TABLE IF EXISTS Producto;
 
@@ -21,8 +21,7 @@ CREATE TABLE Producto(
   descripcion TEXT NOT NULL,
   foto_portada VARCHAR(100) NOT NULL,
   enlace VARCHAR(100),
-  etiquetas VARCHAR(100),
-  publicado BOOLEAN NOT NULL,
+  active BOOLEAN NOT NULL DEFAULT 1,
   PRIMARY KEY(id_prod)
 );
 
@@ -31,195 +30,190 @@ CREATE TABLE Imagenes(
   id_img INT AUTO_INCREMENT,
   ruta VARCHAR(100),
   id_prod INT NOT NULL,
-  pie VARCHAR(100),
   PRIMARY KEY(id_img),
   FOREIGN KEY(id_prod) REFERENCES Producto(id_prod) ON DELETE CASCADE
 );
 
 
 
-/* Tabla de comentarios */
-CREATE TABLE Comentario(
-  id_coment INT AUTO_INCREMENT,
-  id_prod INT NOT NULL,
-  autor VARCHAR(100) NOT NULL,
-  comentario VARCHAR(300),
-  editado BOOLEAN DEFAULT false,
-  fecha DATETIME,
-  PRIMARY KEY(id_coment),
-  FOREIGN KEY(id_prod) REFERENCES Producto(id_prod) ON DELETE CASCADE
-);
 
-/* Tabla de palabras prohibidas */
-CREATE TABLE PalabrasProhibidas(
-  palabra VARCHAR(50),
-  PRIMARY KEY(palabra)
-);
 
 
 /* Tabla de usuarios */
 CREATE TABLE Usuario(
   nick VARCHAR(50),
-  passw VARCHAR (100) NOT NULL,
+  passw VARCHAR (500) NOT NULL,
   email VARCHAR(100) NOT NULL,
-  tipo_usuario ENUM('registrado', 'moderador', 'gestor', 'superusuario') NOT NULL,
+  admin BOOLEAN NOT NULL DEFAULT 0,
   PRIMARY KEY (nick)
+);
+
+
+/* Tabla de pedidos */
+CREATE TABLE Pedido(
+  id_order INT AUTO_INCREMENT,
+  date Timestamp NOT NULL,
+  nick VARCHAR(50) NOT NULL,
+  PRIMARY KEY(id_order),
+  FOREIGN KEY(nick) REFERENCES Usuario(nick) ON DELETE CASCADE
+);
+
+/* Tabla de pedidos */
+CREATE TABLE ShoppingCart(
+  id INT AUTO_INCREMENT,
+  nick VARCHAR(50) NOT NULL,
+  id_prod INT NOT NULL,
+  quantity INT NOT NULL CHECK (quantity>0),
+  id_order INT,
+  price FLOAT,
+  PRIMARY KEY(id),
+  FOREIGN KEY(nick) REFERENCES Usuario(nick) ON DELETE CASCADE,
+  FOREIGN KEY(id_prod) REFERENCES Producto(id_prod) ON DELETE CASCADE,
+  FOREIGN KEY(id_order) REFERENCES Pedido(id_order) ON DELETE CASCADE
+  
 );
 
 /* Añadimos algunos elementos por defecto a cada tabla 
 
 */
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Model S',"105970",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Model S',"105970",
   '<p>
-    El Tesla Model S es una berlina eléctrica, del segmento E, fabricada por Tesla desde 2012. Aunque se trata de un producto veterano, ha sufrido ligeras actualizaciones con el paso de los años. El Tesla Model S tiene cinco plazas distribuidas en dos filas de asientos, pero opcionalmente se puede equipar con siete plazas gracias a una tercera fila con dos asientos para niños. El Tesla Model S se produce en la planta de fabricación que Tesla tiene en Fremont, California (Estados Unidos).
+    La Tesla Model S è una berlina elettrica, nel segmento E, prodotta da Tesla dal 2012. Sebbene sia un prodotto veterano, ha subito lievi aggiornamenti nel corso degli anni. La Tesla Model S ha cinque posti distribuiti su due file di sedili, ma può opzionalmente essere equipaggiata con sette posti grazie a una terza fila con due seggiolini per bambini. La Tesla Model S è prodotta nello stabilimento di produzione Tesla a Fremont, California (Stati Uniti).
   </p>
   <p>
-    Es una berlina de lujo de cinco puertas. Comercializado desde 2012, cuenta con la máxima calificación en materia de seguridad y, es todo un éxito en materia de ventas dentro y fuera de los Estados Unidos.
-  </p>   		
-  <p>
-    Equipado con un paquete de baterías de 60, 75, 90 o 100 kWh, supera en autonomía al Tesla Roadster, siendo capaz de recorrer más de 400 kilómetros entre carga y carga. El motor va en el eje trasero y las baterías van tumbadas en el suelo. ¿Resultado? Un centro de gravedad más bajo para que la berlina vaya a la misma distancia del asfalto que un deportivo. El Tesla Model S está disponible en dos configuraciones diferentes de tracción: trasera y tracción total con motor dual. Esta última configuración equipa un motor en ambos ejes, monitorizados y controlados digitalmente, que permite una tracción óptima en cualquier situación. El Tesla Model S maximiza la capacidad del bloque de baterias con un diseño aerodinámico de lineas fluidas permitiendo una resistencia menor en el flujo de aire. En el interior llama la atención la pantalla táctil de 17 pulgadas, en ángulo hacia el conductor e incluye tanto los modos de día y de noche para una visibilidad sin distracciones. Cada superficie, tapizado y costura equilibra una óptima sensación táctil y visual, así como el respeto al medio ambiente. Los tiradores de las puertas están hechos de zinc pulido a mano, la tapicería de cuero utiliza cuero napa de alta calidad y las molduras decorativas están ejecutadas para preservar su belleza natural. Los materiales se obtienen cerca de la fábrica en California para reducir el impacto ambiental de su transporte a largas distancias.
+    È una berlina di lusso a cinque porte. Commercializzato dal 2012, ha il punteggio più alto in termini di sicurezza ed è un successo in termini di vendite all`interno e all`esterno degli Stati Uniti.
   </p>',
-  './static/img/coche1-1.jpeg', 'https://www.tesla.com/es_es/models',true);
+  './immagini/coche1-1.jpeg', 'https://www.tesla.com/es_es/models',true);
 
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Model 3',"52970",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Model 3',"52970",
   '<p>
-    El Model 3 incluye la opción de motor dual y tracción integral, frenos Performance y llantas Überturbine de 20" para disfrutar de un control total en todas las condiciones climáticas. Además, su alerón de fibra de carbono mejora la estabilidad a velocidades altas, lo que permite que el Model 3 acelere de 0 a 100 km/h* en tan solo 3,3 segundos.
+    La Model 3 include l`opzione di un doppio motore e trazione integrale, freni Performance e pneumatici Überturbine da 20" per un controllo totale in tutte le condizioni atmosferiche. Inoltre, il suo spoiler in fibra di carbonio migliora la stabilità alle alte velocità, consentendo alla Model 3 di accelerare da Da 0 a 100 km/h* in soli 3,3 secondi.
   </p>
   <p>
-    Las características avanzadas de seguridad y comodidad del Piloto automático se han diseñado para ayudarle con las partes más agotadoras de la conducción.
+    Le funzioni avanzate di sicurezza e comfort dell`autopilota sono progettate per aiutarti nelle parti più faticose della guida.
   </p>
   <p>
-    El Model 3 es completamente eléctrico, por lo que nunca tendrá que volver a ir a una estación de servicio. Si lo carga durante la noche en su hogar, se encontrará cada mañana con una batería completamente cargada. Y cuando esté en la carretera, es muy sencillo conectarlo durante el recorrido a cualquier estación pública o a la red de carga de Tesla. Actualmente disponemos de más de 30.000 Supercargadores en todo el mundo, y se inauguran seis ubicaciones nuevas cada semana.
-  </p>
-  ', 
-  "./static/img/coche2-1.jpeg", 'https://www.tesla.com/es_es/model3', true);
-
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Model X',"115870",
-  '<p>
-    Con la mayor potencia y la aceleración más rápida que cualquier otro SUV, el Model X Plaid es el SUV de mayor rendimiento jamás construido. Los trenes motrices del Model X, junto con la arquitectura de baterías renovada, pueden proporcionar un par motor instantáneo a cualquier velocidad.
-  </p>
-  <p>
-    Las plataformas del Model X aúnan las tecnologías de tren motriz y batería para ofrecer unos niveles de rendimiento, autonomía y eficiencia insuperables. El nuevo módulo rediseñado y la arquitectura térmica permiten una carga más rápida, proporcionándole más potencia y resistencia en todas las condiciones.
-  </p>
-  <p>
-    Con el mayor espacio de almacenamiento y capacidad de remolque de cualquier SUV eléctrico, y asientos para hasta siete adultos, el Model X ofrece la máxima utilidad. Las puertas delanteras se abren y cierran automáticamente, las Puertas de ala de halcón facilitan el cargamento y la bola de remolque de serie le permite llevar sus pertenencias allá dónde vaya.
+    La Model 3 è completamente elettrica, quindi non dovrai più recarti a una stazione di servizio. Se lo ricarichi durante la notte a casa, ti ritroverai con una batteria completamente carica ogni mattina. E quando sei in viaggio, è facile connettersi a qualsiasi stazione pubblica o alla rete di ricarica di Tesla mentre sei in viaggio. Al momento disponiamo di oltre 30.000 Supercharger in tutto il mondo, con sei nuove sedi aperte ogni settimana.
   </p>', 
-  './static/img/coche3-1.jpeg', 'https://www.tesla.com/es_es/modelx', true);
+  './immagini/coche2-1.jpeg', 'https://www.tesla.com/es_es/model3', true);
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Model Y',"66970",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Model X',"115870",
   '<p>
-    Como todos los Tesla, el Model Y está diseñado para ser el coche más seguro de su segmento. El centro de gravedad bajo, la estructura rígida del chasis y las grandes zonas de absorción de impactos ofrecen una protección sin igual.
+    Con la massima potenza e l`accelerazione più veloce di qualsiasi SUV, Model X Plaid è il SUV dalle prestazioni più elevate mai costruito. I propulsori della Model X, abbinati a un`architettura della batteria rinnovata, possono fornire una coppia istantanea a qualsiasi velocità.
   </p>
   <p>
-    El Model Y ofrece máxima versatilidad: es capaz de transportar 5 pasajeros y su equipaje. Cada asiento de la segunda fila se abate independientemente, creando espacio flexible para esquíes, muebles, equipaje y mucho más. El portón trasero da acceso a un maletero de suelo bajo con una gran facilidad y rapidez de carga y descarga.
+    Le piattaforme Model X uniscono le tecnologie di propulsione e batteria per offrire livelli insuperabili di prestazioni, autonomia ed efficienza. Il nuovo modulo riprogettato e l`architettura termica consentono una ricarica più rapida, offrendo maggiore potenza e resistenza in tutte le condizioni.
   </p>
   <p>
-    La tracción a las cuatro ruedas de Tesla dispone de dos motores independientes con una capacidad de respuesta excepcional que controlan digitalmente el par motor de las ruedas delanteras y traseras para una conducción, una tracción y un control de la estabilidad mucho mejores. El Model Y se desenvuelve sin problema en condiciones de lluvia, nieve, barro y todo tipo de terreno.
+    Con lo spazio di stivaggio e la capacità di traino più ampi di qualsiasi SUV elettrico e posti a sedere per un massimo di sette adulti, la Model X offre la massima utilità. Le porte anteriori si aprono e si chiudono automaticamente, le porte ad ala Falcon facilitano il carico e la sfera di traino standard ti consente di portare con te i tuoi effetti personali ovunque tu vada.
   </p>', 
-  './static/img/coche4-1.jpeg', 'https://www.tesla.com/es_es/modely', true);
+  './immagini/coche3-1.jpeg', 'https://www.tesla.com/es_es/modelx', true);
 
-
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Cargardor portátil inalámbrico 2.0',"99",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Model Y',"66970",
   '<p>
-    No se quede sin carga en la carretera, en su oficina o en su vida diaria con el cargador portátil inalámbrico 2.0. Simplemente coloque su dispositivo con Qi en la base de carga para una carga rápida y segura o un aumento rápido del nivel de la batería. También puede recargar su cargador portátil inalámbrico 2.0 utilizando la base de carga inalámbrica de su vehículo Tesla o cualquier dispositivo de carga inalámbrico. Ofrece hasta 10 000 mAh de potencia de la batería a 37 Wh e incluye un cable Lightning USB-C integrado para una carga con cable opcional.
+    Come tutte le Tesla, la Model Y è progettata per essere l`auto più sicura del suo segmento. Il baricentro basso, la struttura rigida del telaio e le ampie zone di assorbimento degli urti offrono una protezione senza pari.
   </p>
   <p>
-    Disponible en Plata medianoche metalizado, Azul oscuro metalizado, Multicapas roja, Blanco perla Multicapas y Negro sólido para combinar con cualquier color de pintura de vehículo Tesla.
+    La Model Y offre la massima versatilità: è in grado di trasportare 5 passeggeri e i loro bagagli. Ogni sedile della seconda fila si ripiega in modo indipendente, creando uno spazio flessibile per sci, mobili, bagagli e altro ancora. Il portellone posteriore dà accesso ad un bagagliaio a pianale ribassato con grande facilità e rapidità di carico e scarico.
+  </p>
+  <p>
+    La trazione integrale di Tesla è dotata di due motori indipendenti eccezionalmente reattivi che controllano digitalmente la coppia alle ruote anteriori e posteriori per migliorare notevolmente la maneggevolezza, la trazione e il controllo della stabilità. La Model Y si comporta senza problemi sotto pioggia, neve, fango e tutti i tipi di terreno.
   </p>', 
-  './static/img/cargador_1.avif', 'https://shop.tesla.com/es_es/product/cargador-portatil-inalambrico-2_0?sku=1625886-00-A', true);
+  './immagini/coche4-1.jpeg', 'https://www.tesla.com/es_es/modely', true);
 
 
-
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Soporte de techo para techo de cristal del Model S',"460",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Caricabatterie portatile wireless 2.0',"99",
   '<p>
-    El soporte de techo de cristal del Model S se ha diseñado y fabricado desde cero para maximizar la eficiencia aerodinámica y minimizar el ruido interior y el impacto en la autonomía. El logrado mecanismo de fijación con soportes fundidos y cierres integrados le permite instalarlo sin inconvenientes en su hogar.  
+    Non rimanere senza energia in viaggio, in ufficio o nella vita di tutti i giorni con il caricabatterie portatile wireless 2.0. Posiziona semplicemente il tuo dispositivo abilitato Qi sulla base di ricarica per una ricarica rapida e sicura o un rapido aumento della batteria. Puoi anche ricaricare il tuo caricabatterie portatile wireless 2.0 utilizzando il dock di ricarica wireless del tuo veicolo Tesla o qualsiasi dispositivo di ricarica wireless. Offre fino a 10.000 mAh di carica della batteria da 37 Wh e include un cavo Lightning USB-C integrato per la ricarica cablata opzionale.
   </p>
   <p>
-    Las barras de techo de aluminio recubierto con polvo cuentan con ranuras en T para fijar sin inconvenientes los accesorios compatibles, como portaesquís, portabicicletas y cofres de techo.
-  </p>
-  <p>
-    Se puede adaptar cualquier Model S que se haya pedido antes del 7 de febrero de 2019 para que sea compatible con el soporte de techo. Obtenga más información sobre el soporte de techo de cristal del Model S y sobre cómo equipar su vehículo en nuestra  página de soporte.
+    Disponibile in Midnight Silver Metallic, Dark Blue Metallic, Red Multi-Coat, Pearl White Multi-Coat e Solid Black per abbinarsi a qualsiasi colore di vernice per veicoli Tesla.
   </p>', 
-  './static/img/soporte_techo_1.avif', 'https://shop.tesla.com/es_es/product/soporte-de-techo-para-techo-de-cristal-del-model_s', true);
+  './immagini/cargador_1.avif', 'https://shop.tesla.com/es_es/product/cargador-portatil-inalambrico-2_0?sku=1625886-00-A', true);
 
 
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Conector de pared de tercera generación',"549",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Portapacchi per tetto in vetro Model S',"460",
   '<p>
-    El conector de pared es la solución de carga más conveniente para casas, apartamentos, hostelería y lugares de trabajo.
+    Il portapacchi in vetro della Model S è stato progettato e realizzato da zero per massimizzare l`efficienza aerodinamica e ridurre al minimo il rumore interno e l`impatto sull`autonomia. L`intelligente meccanismo di fissaggio con staffe pressofuse e chiusure integrate ti consente di installarlo senza problemi nella tua casa.  
   </p>
   <p>
-    Con hasta 71 km de autonomía añadida por hora de carga, múltiples ajustes de potencia, 7,3 m de longitud y un diseño versátil en interiores y exteriores, el conector de pared ofrece una comodidad sin igual.
+    Le barre del tetto in alluminio verniciato a polvere sono dotate di scanalature a T per fissare senza problemi accessori compatibili come portasci, portabici e box da tetto.
   </p>
   <p>
-    Los conectores de pared pueden compartir la energía para maximizar la capacidad eléctrica existente, distribuyendo automáticamente la energía para cargar varios coches simultáneamente.
+    Qualsiasi Model S ordinata prima del 7 febbraio 2019 può essere adattata per essere compatibile con il portapacchi. Scopri di più sul portapacchi in vetro Model S e su come allestire il tuo veicolo sulla nostra pagina di supporto.
   </p>', 
-  './static/img/conector_1.avif', 'https://shop.tesla.com/es_es/product/conector-de-pared-de-tercera-generacion', true);
+  './immagini/soporte_techo_1.avif', 'https://shop.tesla.com/es_es/product/soporte-de-techo-para-techo-de-cristal-del-model_s', true);
 
 
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Umbrales de puerta iluminados del Model S',"250",
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Connettore a parete di terza generazione',"549",
   '<p>
-    Añada un toque premium a su Tesla al destacar el nombre del modelo de su vehículo con los umbrales de las puertas iluminados del Model S. Esta elegante incorporación no requiere cableado adicional al sistema eléctrico de su vehículo. Cada umbral se activa mediante un interruptor magnético y se alimenta con una batería de larga duración con LED para una instalación sencilla.
+    Il Wall Connector è la soluzione di ricarica più conveniente per case, appartamenti, strutture ricettive e luoghi di lavoro.
   </p>
   <p>
-    Incluye: 2x umbrales de puerta iluminados, 2x interruptores magnéticos y plantillas de instalación, 1x herramienta de palanca.
+    Con fino a 45 miglia di autonomia aggiuntiva all`ora di carica, più impostazioni di alimentazione, 25` di lunghezza e un design versatile per interni ed esterni, il connettore a parete offre una praticità senza pari.
+  </p>
+  <p>
+    I Wall Connector possono condividere l`energia per massimizzare la capacità elettrica esistente, distribuendo automaticamente l`energia per ricaricare più auto contemporaneamente.
   </p>', 
-  './static/img/umbrales_1.avif', 'https://shop.tesla.com/es_es/product/umbrales-de-puerta-iluminados-del-model-s', true);
+  './immagini/conector_1.avif', 'https://shop.tesla.com/es_es/product/conector-de-pared-de-tercera-generacion', true);
 
 
-INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, publicado) VALUES('Protectores interiores para cualquier clima del Model S',"290",
+
+/*
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Ombrelli da porta illuminati del Model S',"250",
   '<p>
-    Los protectores del maletero trasero para cualquier clima del Model S de Tesla, rediseñados recientemente, están hechos a medida usando la última tecnología en mediciones láser digitales para su Model S. Esta excelente protección del suelo cubre y protege su Model S para mantenerlo libre de suciedad y derrames. Las alfombrillas están fabricadas de material elastómero termoplástico, que cuenta con un núcleo rígido para ofrecer una resistencia inigualable y una limpieza sencilla.
+    Aggiungi un tocco premium alla tua Tesla per togliere il nome del modello del tuo veicolo con gli ombrelli delle porte illuminate del Model S. Questa elegante incorporazione non richiede cavi aggiuntivi al sistema elettrico del tuo veicolo. Ogni ombra si attiva mediante un interruttore magnetico e si alimenta con una batteria a lunga durata con LED per un`installazione senza fili.
   </p>
   <p>
-    Entre las mejoras de los protectores interiores se incluyen la adición de parches de retención en las alfombrillas delanteras para facilitar su instalación, así como el aumento de la altura de las paredes para proteger mejor los suelos delanteros del vehículo.
+    Include: 2 battitacco illuminati, 2 interruttori magnetici e modelli di installazione, 1 leva.
+  </p>', 
+  './immagini/umbrales_1.avif', 'https://shop.tesla.com/es_es/product/umbrales-de-puerta-iluminados-del-model-s', true);
+
+
+INSERT INTO Producto(nombre, precio, descripcion, foto_portada, enlace, active) VALUES('Protezioni interne per tutte le stagioni della Model S',"290",
+  '<p>
+    Le fodere del bagagliaio posteriore Tesla Model S All Weather recentemente riprogettate sono realizzate su misura utilizzando la più recente tecnologia nelle misurazioni laser digitali per la tua Model S. Questa protezione del pavimento premium copre e protegge la tua Model S per mantenerla priva di sporco e fuoriuscite. I tappetini sono realizzati in materiale elastomerico termoplastico, che ha un`anima rigida per una resistenza senza pari e una facile pulizia.
   </p>
   <p>
-    Incluye: 1 protector de suelo para el lado del conductor, 1 protector de suelo para el lado del pasajero, 1 protector de suelo de la segunda fila.
+    I miglioramenti al rivestimento interno includono l`aggiunta di toppe di fissaggio ai tappetini anteriori per facilitare l`installazione, nonché l`aumento dell`altezza delle pareti laterali per proteggere meglio i pavimenti anteriori del veicolo.
+  </p>
+  <p>
+    Include: 1 protezione pavimento lato conducente, 1 protezione pavimento lato passeggero, 1 protezione pavimento 2a fila.
   </p>', 
   './static/img/protectores_1.avif', 'https://shop.tesla.com/es_es/product/protectores-interiores-para-cualquier-clima-del-model_s', true);
+*/
+
+
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche1-1.jpeg', 1);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche1-2.jpeg', 1);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche2-1.jpeg', 2);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche2-2.jpeg', 2);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche3-1.jpeg', 3);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche3-2.jpeg', 3);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche4-1.jpeg', 4);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/coche4-2.jpeg', 4);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/cargador_1.avif', 5);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/cargador_2.jpg', 5);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/soporte_techo_1.avif', 6);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/soporte_techo_2.avif', 6);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/conector_1.avif', 7);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./immagini/conector_2.avif', 7);
+/*
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./static/img/conector_1.avif', 8);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./static/img/conector_2.avif', 8);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./static/img/protectores_1.avif', 9);
+INSERT INTO Imagenes(ruta, id_prod) VALUES('./static/img/protectores_2.avif', 9);
+*/
 
 
 
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche1-1.jpeg', 1, 'Model S Rojo con paisaje.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche1-2.jpeg', 1, 'Model S Azul en movimiento.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche2-1.jpeg', 2, 'Model 3 Rojo desde arriba.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche2-2.jpeg', 2, 'Model 3 Salpicadero.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche3-1.jpeg', 3, 'Model X Blanco en movimiento.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche3-2.jpeg', 3, 'Model X Blanco con paisaje.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche4-1.jpeg', 4, 'Model Y Azul.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/coche4-2.jpeg', 4, 'Model Y Rojo en movimiento.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/cargador_1.avif', 5, 'Cargador en rojo dentro de caja.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/cargador_2.jpg', 5, 'Cargador en negro.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/soporte_techo_1.avif', 6, 'Soporte en model S.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/soporte_techo_2.avif', 6, 'Soporte siendo utilizado para bici.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/conector_1.avif', 7, 'Conector de pared blanco.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/conector_2.avif', 7, 'Conector de pared blanco desde lejos.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/conector_1.avif', 8, 'Umbrales iluminados para model S');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/conector_2.avif', 8, 'Umbrales iluminados para model S en distintta posición.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/protectores_1.avif', 9, 'Protectores para model S.');
-INSERT INTO Imagenes(ruta, id_prod, pie) VALUES('./static/img/protectores_2.avif', 9, 'Protector del conductor.');
 
 
-
-INSERT INTO Comentario(id_prod, autor, comentario, fecha) VALUES (1, 'Pepito Grillo', 'Aqui pongo mi comentario.', NOW());
-INSERT INTO Comentario(id_prod, autor, comentario, fecha) VALUES (2, 'Antonio José', 'Aqui pongo mi comentario.', NOW());
-INSERT INTO Comentario(id_prod, autor, comentario, fecha) VALUES (2, 'Naranjito', 'Aqui pongo mi comentario.', NOW());
-INSERT INTO Comentario(id_prod, autor, comentario, fecha) VALUES (3, 'Pinocho', 'Aqui pongo mi comentario.', NOW());
-
-
-INSERT INTO PalabrasProhibidas(palabra) VALUES('culo');
-INSERT INTO PalabrasProhibidas(palabra) VALUES('caca');
-INSERT INTO PalabrasProhibidas(palabra) VALUES('tonto');
-INSERT INTO PalabrasProhibidas(palabra) VALUES('mierda');
-INSERT INTO PalabrasProhibidas(palabra) VALUES('puta');
-INSERT INTO PalabrasProhibidas(palabra) VALUES('gilipollas');
-
-
-/* Contraseña: antoniojoselp */
-INSERT INTO Usuario(nick, passw, email, tipo_usuario) VALUES ('antoniojoselp', '$2y$10$bSjCCkNJUrgg8YgJKc.SEObdjphM9iWsx9/uzZEYAo6hy4VQl.hj6', 'antoniojoselp@correo.ugr.es', 'superusuario');
+/* Contraseña: antonio */
+INSERT INTO Usuario(nick, passw, email, admin) VALUES ('antonio', '6fc10570c810f24685e42b7db25ab335cd79e38f4f0a0ed41312a4dbfbe272d9ebafff097ca499d195e1466e4047fcec9a4a4fa287ac1a0866155f8e1d1871ae', 'antoniojoselp@correo.ugr.es', true);
 
 
