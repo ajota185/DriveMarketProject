@@ -39,7 +39,8 @@ public class ServletLogin extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at:").append(request.getContextPath());
+//		response.getWriter().append("Served at:").append(request.getContextPath());
+		doPost(request,response);
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class ServletLogin extends HttpServlet {
 		
 		User user=(User) session.getAttribute("user");
 		
-		if(user == null) {
+		if(user == null &&request.getParameter("nick")!=null && request.getParameter("password")!=null ) {
 			String nick = request.getParameter("nick");
 			String passw = request.getParameter("password");
 			String hashPassw = toHash(passw);
